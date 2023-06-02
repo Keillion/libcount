@@ -31,6 +31,9 @@ class HLL {
   // estimate. Returns NULL on failure. In the event of failure, the caller
   // may provide a pointer to an integer to learn the reason.
   static HLL* Create(int precision, int* error = 0);
+  
+  // reuse outside registers
+  static HLL* Create(int precision, uint8_t* registers, int* error = 0);
 
   // Update the instance to record the observation of an element. It is
   // assumed that the caller uses a high-quality 64-bit hash function that
@@ -52,7 +55,7 @@ class HLL {
   HLL& operator=(const HLL& no_assign);
 
   // Constructor is private: we validate the precision in the Create function.
-  explicit HLL(int precision);
+  HLL(int precision, uint8_t* registers);
 
   // Compute the raw estimate based on the HyperLogLog algorithm.
   double RawEstimate() const;
@@ -63,6 +66,7 @@ class HLL {
   int precision_;
   int register_count_;
   uint8_t* registers_;
+  bool bNeedReleaseRegister;
 };
 
 }  // namespace libcount

@@ -55,8 +55,8 @@ inline uint8_t ZeroCountOf(uint64_t hash, int precision) {
 
 namespace libcount {
 
-HLL::HLL(int precision)
-    : precision_(precision), register_count_(0), registers_(NULL) {
+HLL::HLL(int precision, uint8_t* registers)
+    : precision_(precision), register_count_(0), registers_(registers) {
   // The precision is vetted by the Create() function.  Assertions nonetheless.
   assert(precision >= HLL_MIN_PRECISION);
   assert(precision <= HLL_MAX_PRECISION);
@@ -64,20 +64,36 @@ HLL::HLL(int precision)
   // We employ (2 ^ precision) "registers" to store max leading zeroes.
   register_count_ = (1 << precision);
 
-  // Allocate space for the registers. We can safely economize by using bytes
-  // for the counters because we know the value can't ever exceed ~60.
-  registers_ = new uint8_t[register_count_];
-  memset(registers_, 0, register_count_ * sizeof(registers_[0]));
+  if (NULL == registers_) {
+    // Allocate space for the registers. We can safely economize by using bytes
+    // for the counters because we know the value can't ever exceed ~60.
+    registers_ = new uint8_t[register_count_];
+    memset(registers_, 0, register_count_ * sizeof(registers_[0]));
+    bNeedReleaseRegister = true;
+  } else {
+    bNeedReleaseRegister = false;
+  }
 }
 
-HLL::~HLL() { delete[] registers_; }
+HLL::~HLL() {
+  if (bNeedReleaseRegister) {
+    delete[] registers_;
+  }
+}
 
 HLL* HLL::Create(int precision, int* error) {
   if ((precision < HLL_MIN_PRECISION) || (precision > HLL_MAX_PRECISION)) {
     MaybeAssign(error, EINVAL);
     return NULL;
   }
-  return new HLL(precision);
+  return new HLL(precision, NULL);
+}
+HLL* HLL::Create(int precision, uint8_t* registers, int* error) {
+  if ((precision < HLL_MIN_PRECISION) || (precision > HLL_MAX_PRECISION)) {
+    MaybeAssign(error, EINVAL);
+    return NULL;
+  }
+  return new HLL(precision, registers);
 }
 
 void HLL::Update(uint64_t hash) {

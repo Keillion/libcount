@@ -1,3 +1,7 @@
+Keillion has modified this branch for some specific projects, which may cause this library to be unsuitable for other projects. Please choose carefully. It is recommended to use the original repository https://github.com/dialtr/libcount.
+
+----
+
 # libcount
 
 The goal of libcount is to provide a complete C/C++ implementation of the
