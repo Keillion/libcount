@@ -1,5 +1,11 @@
 Keillion has modified this branch for some specific projects, which may cause this library to be unsuitable for other projects. Please choose carefully. It is recommended to use the original repository https://github.com/dialtr/libcount.
 
+```shell
+gcc -c -fPIC ./dlshll.cpp ./count/empirical_data.cc ./count/hll.cc ./count/hll_data.cc ./count/utility.cc -I ./ -I ./include/
+gcc -shared *.o -o libdlshll.so
+```
+
+
 ----
 
 # libcount

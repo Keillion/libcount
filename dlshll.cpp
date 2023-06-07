@@ -1,12 +1,19 @@
 #include <stdint.h>
 #include "count/hll.h"
 
+#ifdef _WINDLL
+#define DLSHLL_EXPORT extern "C" __declspec(dllexport)
+#else
+#define DLSHLL_EXPORT extern "C"
+#endif
 
-extern "C" __declspec(dllexport) void dlsUpdateHll(int precision, uint8_t* pBytesRegisters, uint64_t hash) {
+
+DLSHLL_EXPORT void dlsUpdateHll(int precision, uint8_t* pBytesRegisters,
+                                uint64_t hash) {
 	auto hll = libcount::HLL::Create(precision, pBytesRegisters);
 	hll->Update(hash);
 }
-extern "C" __declspec(dllexport) uint64_t dlsEstimateHll(int precision, uint8_t * pBytesRegisters) {
+DLSHLL_EXPORT uint64_t dlsEstimateHll(int precision, uint8_t* pBytesRegisters) {
 	auto hll = libcount::HLL::Create(precision, pBytesRegisters);
 	return hll->Estimate();
 }
