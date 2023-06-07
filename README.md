@@ -5,6 +5,7 @@ gcc -c -fPIC ./dlshll.cpp ./count/empirical_data.cc ./count/hll.cc ./count/hll_d
 gcc -shared *.o -o libdlshll.so
 ```
 
+If gcc not support `auto`, add `-std=c++11`.
 
 ----
 
