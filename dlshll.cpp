@@ -4,7 +4,7 @@
 #ifdef _WINDLL
 #define DLSHLL_EXPORT extern "C" __declspec(dllexport)
 #else
-#define DLSHLL_EXPORT extern "C"
+#define DLSHLL_EXPORT extern "C" __attribute((visibility("default")))
 #endif
 
 
