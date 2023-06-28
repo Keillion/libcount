@@ -7,6 +7,8 @@ gcc -shared *.o -o libdlshll.so
 
 If gcc not support `auto`, add `-std=c++11`.
 
+(TODO: check gcc or g++)
+
 For working on multiple platforms and libraries compability, use `-static-libstdc++ -fvisibility=hidden -Wl,-Bsymbolic` in linking.
 
 ----
